@@ -1,0 +1,57 @@
+### Criar uma nova bebida
+POST http://localhost:3000/bebidas
+Content-Type: application/json
+
+{
+  "nome": "Guaraná",
+  "tipo": "Refrigerante",
+  "validade": "2025-12-01",
+  "preco": 5.5
+}
+
+### Listar todas as bebidas
+GET http://localhost:3000/bebidas
+
+### Buscar bebida por ID
+GET http://localhost:3000/bebidas/1
+
+### Atualizar bebida
+PUT http://localhost:3000/bebidas/1
+Content-Type: application/json
+
+{
+  "nome": "Guaraná Antártica",
+  "preco": 6.0
+}
+
+### Deletar bebida
+DELETE http://localhost:3000/bebidas/1
+
+###
+
+### Criar um novo fornecedor
+POST http://localhost:3000/fornecedores
+Content-Type: application/json
+
+{
+  "nome": "Distribuidora São João",
+  "cnpj": "12.345.678/0001-99",
+  "contato": "saojoao@bebidas.com"
+}
+
+### Listar todos os fornecedores
+GET http://localhost:3000/fornecedores
+
+### Buscar fornecedor por ID
+GET http://localhost:3000/fornecedores/d03dcc2e-eeb1-44ef-9151-f76a2ce1187c
+
+### Atualizar fornecedor
+PUT http://localhost:3000/fornecedores/d03dcc2e-eeb1-44ef-9151-f76a2ce1187c
+Content-Type: application/json
+
+{
+  "contato": "atendimento@bebidas.com"
+}
+
+### Deletar fornecedor
+DELETE http://localhost:3000/fornecedores/d03dcc2e-eeb1-44ef-9151-f76a2ce1187c
