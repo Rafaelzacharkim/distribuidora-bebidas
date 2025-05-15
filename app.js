@@ -1,21 +1,24 @@
 const express = require('express');
 const app = express();
 
-app.use(express.json()); // pra entender JSON nas requisições
+const bebidaRoutes = require('./routes/bebidaRoutes');
+const fornecedorRoutes = require('./routes/fornecedorRoutes'); 
 
-// Rota básica pra testar se tá rodando
+app.use(express.json());
+
 app.get('/', (req, res) => {
   res.send('API da Distribuidora de Bebidas tá ON!');
 });
 
-// Porta do servidor
+
+app.use('/bebidas', bebidaRoutes);
+app.use('/fornecedores', fornecedorRoutes); 
+
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
 
-const bebidaRoutes = require('./routes/bebidaRoutes');
-app.use('/bebidas', bebidaRoutes);
+const estoqueRoutes = require('./routes/estoqueRoutes');
+app.use('/estoque', estoqueRoutes);
 
-const fornecedorRoutes = require('./routes/fornecedorRoutes');
-app.use(fornecedorRoutes);

@@ -1,52 +1,24 @@
-### Criar uma nova bebida
-POST http://localhost:3000/bebidas
-Content-Type: application/json
+# Teste de API para o sistema de gerenciamento de bebidas
 
-{
-  "nome": "Guaraná",
-  "tipo": "Refrigerante",
-  "validade": "2025-12-01",
-  "preco": 5.5
-}
-
-### Listar todas as bebidas
-GET http://localhost:3000/bebidas
-
-### Buscar bebida por ID
-GET http://localhost:3000/bebidas/1
-
-### Atualizar bebida
-PUT http://localhost:3000/bebidas/1
-Content-Type: application/json
-
-{
-  "nome": "Guaraná Antártica",
-  "preco": 6.0
-}
-
-### Deletar bebida
-DELETE http://localhost:3000/bebidas/1
-
-###
-
-### Criar um novo fornecedor
+# Criar fornecedor
 POST http://localhost:3000/fornecedores
 Content-Type: application/json
 
 {
-  "nome": "Distribuidora São João",
-  "cnpj": "12.345.678/0001-99",
-  "contato": "saojoao@bebidas.com"
+  "nome": "Fornecedor XPTO",
+  "cnpj": "12345678900001",
+  "contato": "contato@xpto.com"
 }
+
 
 ### Listar todos os fornecedores
 GET http://localhost:3000/fornecedores
 
 ### Buscar fornecedor por ID
-GET http://localhost:3000/fornecedores/d03dcc2e-eeb1-44ef-9151-f76a2ce1187c
+GET http://localhost:3000/fornecedores/e24d707a-02d6-4a61-8bb0-f573057c3e7b
 
 ### Atualizar fornecedor
-PUT http://localhost:3000/fornecedores/d03dcc2e-eeb1-44ef-9151-f76a2ce1187c
+PUT http://localhost:3000/fornecedores/e24d707a-02d6-4a61-8bb0-f573057c3e7b
 Content-Type: application/json
 
 {
@@ -54,4 +26,66 @@ Content-Type: application/json
 }
 
 ### Deletar fornecedor
-DELETE http://localhost:3000/fornecedores/d03dcc2e-eeb1-44ef-9151-f76a2ce1187c
+DELETE http://localhost:3000/fornecedores/e24d707a-02d6-4a61-8bb0-f573057c3e7b
+
+
+
+### Criar bebida com idFornecedor (substitua pelo ID real depois de criar o fornecedor)
+POST http://localhost:3000/bebidas
+Content-Type: application/json
+
+{
+  "nome": "Guaraná",
+  "marca": "Antarctica",
+  "volume": "350ml",
+  "valor": 5.0,
+  "idFornecedor": "e24d707a-02d6-4a61-8bb0-f573057c3e7b"
+}
+
+
+
+### Listar todas as bebidas
+GET http://localhost:3000/bebidas
+
+### Buscar bebida por ID
+GET http://localhost:3000/bebidas/538c6afb-598a-4db5-a978-09f68a5871a7
+
+### Atualizar bebida
+PUT http://localhost:3000/bebidas/538c6afb-598a-4db5-a978-09f68a5871a7
+Content-Type: application/json
+
+{
+  "nome": "Guaraná Antártica",
+  "valor": 6.0
+}
+
+### Deletar bebida
+DELETE http://localhost:3000/bebidas/538c6afb-598a-4db5-a978-09f68a5871a7
+
+###
+
+### Criar estoque para bebida
+POST http://localhost:3000/estoque
+Content-Type: application/json
+
+{
+  "idBebida": 1,
+  "quantidade": 50
+}
+
+### Listar estoque
+GET http://localhost:3000/estoque
+
+### Buscar estoque de uma bebida
+GET http://localhost:3000/estoque/1
+
+### Atualizar quantidade do estoque
+PUT http://localhost:3000/estoque/1
+Content-Type: application/json
+
+{
+  "novaQuantidade": 100
+}
+
+### Remover estoque de uma bebida
+DELETE http://localhost:3000/estoque/1
