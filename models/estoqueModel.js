@@ -1,45 +1,49 @@
+const { v4: uuidv4 } = require('uuid');
+
 let estoque = [];
 
-function adicionarEstoque(idBebida, quantidade) {
-  const itemExistente = estoque.find(item => item.idBebida === idBebida);
+function criarEstoque({ bebidaId, quantidade, localArmazenamento, ultimaReposicao }) {
+  const novoEstoque = {
+    id: uuidv4(),
+    bebidaId,
+    quantidade,
+    localArmazenamento,
+    ultimaReposicao: ultimaReposicao || new Date().toISOString(),
+  };
 
-  if (itemExistente) {
-    itemExistente.quantidade += quantidade;
-  } else {
-    estoque.push({ idBebida, quantidade });
-  }
-
-  return buscarEstoquePorBebida(idBebida);
+  estoque.push(novoEstoque);
+  return novoEstoque;
 }
 
-function listarEstoque() {
+function listarEstoques() {
   return estoque;
 }
 
-function buscarEstoquePorBebida(idBebida) {
-  return estoque.find(item => item.idBebida === idBebida);
+function buscarEstoquePorId(id) {
+  return estoque.find(e => e.id === id);
 }
 
-function atualizarEstoque(idBebida, novaQuantidade) {
-  const item = estoque.find(item => item.idBebida === idBebida);
-  if (!item) return null;
-
-  item.quantidade = novaQuantidade;
-  return item;
+function atualizarEstoque(id, dadosAtualizados) {
+  const index = estoque.findIndex(e => e.id === id);
+  if (index !== -1) {
+    estoque[index] = { ...estoque[index], ...dadosAtualizados };
+    return estoque[index];
+  }
+  return null;
 }
 
-function removerEstoque(idBebida) {
-  const index = estoque.findIndex(item => item.idBebida === idBebida);
-  if (index === -1) return false;
-
-  estoque.splice(index, 1);
-  return true;
+function deletarEstoque(id) {
+  const index = estoque.findIndex(e => e.id === id);
+  if (index !== -1) {
+    return estoque.splice(index, 1)[0];
+  }
+  return null;
 }
 
 module.exports = {
-  adicionarEstoque,
-  listarEstoque,
-  buscarEstoquePorBebida,
+  criarEstoque,
+  listarEstoques,
+  buscarEstoquePorId,
   atualizarEstoque,
-  removerEstoque
+  deletarEstoque
 };

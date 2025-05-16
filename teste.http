@@ -15,10 +15,10 @@ Content-Type: application/json
 GET http://localhost:3000/fornecedores
 
 ### Buscar fornecedor por ID
-GET http://localhost:3000/fornecedores/e24d707a-02d6-4a61-8bb0-f573057c3e7b
+GET http://localhost:3000/fornecedores/bd8c7c89-c7ec-4813-9104-f2b448a41e40
 
 ### Atualizar fornecedor
-PUT http://localhost:3000/fornecedores/e24d707a-02d6-4a61-8bb0-f573057c3e7b
+PUT http://localhost:3000/fornecedores/bd8c7c89-c7ec-4813-9104-f2b448a41e40
 Content-Type: application/json
 
 {
@@ -26,7 +26,7 @@ Content-Type: application/json
 }
 
 ### Deletar fornecedor
-DELETE http://localhost:3000/fornecedores/e24d707a-02d6-4a61-8bb0-f573057c3e7b
+DELETE http://localhost:3000/fornecedores/9b96dd93-2079-40c3-a075-90a4b8a3e580
 
 
 
@@ -39,7 +39,7 @@ Content-Type: application/json
   "marca": "Antarctica",
   "volume": "350ml",
   "valor": 5.0,
-  "idFornecedor": "e24d707a-02d6-4a61-8bb0-f573057c3e7b"
+  "idFornecedor": "8beb3a27-6b66-4275-a010-82afcee1874e"
 }
 
 
@@ -48,10 +48,10 @@ Content-Type: application/json
 GET http://localhost:3000/bebidas
 
 ### Buscar bebida por ID
-GET http://localhost:3000/bebidas/538c6afb-598a-4db5-a978-09f68a5871a7
+GET http://localhost:3000/bebidas/009a957c-1c5b-4bfc-a4bd-41908deac991
 
 ### Atualizar bebida
-PUT http://localhost:3000/bebidas/538c6afb-598a-4db5-a978-09f68a5871a7
+PUT http://localhost:3000/bebidas/009a957c-1c5b-4bfc-a4bd-41908deac991
 Content-Type: application/json
 
 {
@@ -62,30 +62,55 @@ Content-Type: application/json
 ### Deletar bebida
 DELETE http://localhost:3000/bebidas/538c6afb-598a-4db5-a978-09f68a5871a7
 
-###
 
-### Criar estoque para bebida
+### Criar estoque para bebida (substitua o ID real da bebida abaixo!)
 POST http://localhost:3000/estoque
 Content-Type: application/json
 
 {
-  "idBebida": 1,
-  "quantidade": 50
+  "bebidaId": "ed9f7bc9-6f5b-4d14-a938-0bbd0f748183",
+  "quantidade": 50,
+  "localArmazenamento": "Depósito A"
 }
 
 ### Listar estoque
 GET http://localhost:3000/estoque
 
-### Buscar estoque de uma bebida
-GET http://localhost:3000/estoque/1
+### Buscar estoque por ID
+GET http://localhost:3000/estoque/41e3eadf-8b79-4f5c-a3e0-4527a479da3f
 
 ### Atualizar quantidade do estoque
-PUT http://localhost:3000/estoque/1
+PUT http://localhost:3000/estoque/41e3eadf-8b79-4f5c-a3e0-4527a479da3f
 Content-Type: application/json
 
 {
-  "novaQuantidade": 100
+  "quantidade": 100
 }
 
-### Remover estoque de uma bebida
-DELETE http://localhost:3000/estoque/1
+### Remover estoque
+DELETE http://localhost:3000/estoque/41e3eadf-8b79-4f5c-a3e0-4527a479da3f
+
+
+### Adicionar bebida ao carrinho
+POST http://localhost:3000/carrinho
+Content-Type: application/json
+
+{
+  "bebidaId": "85e96dd5-9943-4375-a7d9-8a92446a1389",
+  "quantidade": 3
+}
+
+### Ver carrinho
+GET http://localhost:3000/carrinho
+
+### Remover um item
+DELETE http://localhost:3000/carrinho/59d32722-89fd-4c85-823c-5f8f0229ffa6
+
+### Esvaziar carrinho
+DELETE http://localhost:3000/carrinho
+
+
+
+### Criar vendas
+
+POST http://localhost:3000/vendas

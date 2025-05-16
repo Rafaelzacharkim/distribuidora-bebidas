@@ -1,44 +1,70 @@
-const estoqueModel = require('../models/estoqueModel');
+const Estoque = require('../models/estoqueModel');
+const Bebida = require('../models/bebidaModel');
 
-function adicionar(req, res) {
-  const { idBebida, quantidade } = req.body;
-  if (!idBebida || quantidade == null) {
-    return res.status(400).json({ erro: 'ID da bebida e quantidade são obrigatórios.' });
+function criarEstoque(req, res) {
+  const { bebidaId, quantidade, localArmazenamento, ultimaReposicao } = req.body;
+
+  const bebidaExiste = Bebida.buscarPorId(bebidaId);
+  if (!bebidaExiste) {
+    return res.status(400).json({ erro: 'Bebida não encontrada.' });
   }
 
-  const resultado = estoqueModel.adicionarEstoque(idBebida, quantidade);
-  res.status(201).json(resultado);
+  const novo = Estoque.criarEstoque({
+    bebidaId,
+    quantidade,
+    localArmazenamento,
+    ultimaReposicao
+  });
+
+  res.status(201).json(novo);
 }
 
-function listar(req, res) {
-  res.json(estoqueModel.listarEstoque());
+function listarEstoques(req, res) {
+  const lista = Estoque.listarEstoques().map(e => {
+    const bebida = Bebida.buscarPorId(e.bebidaId);
+    return {
+      ...e,
+      bebida: bebida ? {
+        nome: bebida.nome,
+        marca: bebida.marca,
+        volume: bebida.volume,
+        preco: bebida.preco
+      } : null
+    };
+  });
+
+  res.json(lista);
 }
 
-function buscar(req, res) {
-  const idBebida = parseInt(req.params.idBebida);
-  const estoque = estoqueModel.buscarEstoquePorBebida(idBebida);
-  if (!estoque) return res.status(404).json({ erro: 'Estoque não encontrado para essa bebida.' });
+function buscarEstoquePorId(req, res) {
+  const estoque = Estoque.buscarEstoquePorId(req.params.id);
+  if (!estoque) return res.status(404).json({ erro: 'Item de estoque não encontrado.' });
 
-  res.json(estoque);
+  const bebida = Bebida.buscarPorId(estoque.bebidaId);
+  res.json({
+    ...estoque,
+    bebida: bebida || null
+  });
 }
 
-function atualizar(req, res) {
-  const idBebida = parseInt(req.params.idBebida);
-  const { novaQuantidade } = req.body;
-  const atualizado = estoqueModel.atualizarEstoque(idBebida, novaQuantidade);
-
-  if (!atualizado) return res.status(404).json({ erro: 'Estoque não encontrado para essa bebida.' });
+function atualizarEstoque(req, res) {
+  const atualizado = Estoque.atualizarEstoque(req.params.id, req.body);
+  if (!atualizado) return res.status(404).json({ erro: 'Item de estoque não encontrado.' });
 
   res.json(atualizado);
 }
 
-function remover(req, res) {
-  const idBebida = parseInt(req.params.idBebida);
-  const removido = estoqueModel.removerEstoque(idBebida);
+function deletarEstoque(req, res) {
+  const deletado = Estoque.deletarEstoque(req.params.id);
+  if (!deletado) return res.status(404).json({ erro: 'Item de estoque não encontrado.' });
 
-  if (!removido) return res.status(404).json({ erro: 'Estoque não encontrado.' });
-
-  res.status(204).send();
+  res.json(deletado);
 }
 
-module.exports = { adicionar, listar, buscar, atualizar, remover };
+module.exports = {
+  criarEstoque,
+  listarEstoques,
+  buscarEstoquePorId,
+  atualizarEstoque,
+  deletarEstoque
+};
