@@ -24,7 +24,7 @@ function remover(req, res) {
   res.json({ mensagem: 'Item removido com sucesso.' });
 }
 
-function esvaziar(req, res) {
+function esvaziar(res) {
   Carrinho.esvaziarCarrinho();
   res.json({ mensagem: 'Carrinho esvaziado.' });
 }

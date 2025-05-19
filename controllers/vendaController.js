@@ -1,56 +1,87 @@
-const Carrinho = require('../models/carrinhoModel');
+const Venda = require('../models/vendaModel');
 const Estoque = require('../models/estoqueModel');
 const Bebida = require('../models/bebidaModel');
-const Venda = require('../models/vendaModel');
 
-function finalizarCompra(req, res) {
-  const itensCarrinho = Carrinho.listarCarrinho();
+function criarVenda(req, res) {
+  const { itens } = req.body;
 
-  if (itensCarrinho.length === 0) {
-    return res.status(400).json({ erro: 'Carrinho está vazio.' });
+  if (!Array.isArray(itens) || itens.length === 0) {
+    return res.status(400).json({ erro: 'Itens da venda são obrigatórios.' });
   }
 
-  const errosEstoque = [];
+  let total = 0;
+  const itensProcessados = [];
 
-  for (const item of itensCarrinho) {
-    const estoqueBebida = Estoque.listarEstoques().find(e => e.bebidaId === item.bebidaId);
+  for (const item of itens) {
+    const bebida = Bebida.buscarPorId(item.bebidaId);
+    const estoque = Estoque.listarEstoques().find(e => e.bebidaId === item.bebidaId);
 
-    if (!estoqueBebida || estoqueBebida.quantidade < item.quantidade) {
-      const bebida = Bebida.buscarPorId(item.bebidaId);
-      errosEstoque.push({
-        bebida: bebida ? bebida.nome : 'Desconhecida',
-        disponivel: estoqueBebida ? estoqueBebida.quantidade : 0,
-        solicitada: item.quantidade
-      });
+    if (!bebida || !estoque) {
+      return res.status(400).json({ erro: `Bebida ou estoque não encontrado para ID ${item.bebidaId}` });
     }
-  }
 
-  if (errosEstoque.length > 0) {
-    return res.status(400).json({
-      erro: 'Estoque insuficiente para alguns itens.',
-      detalhes: errosEstoque
+    if (estoque.quantidade < item.quantidade) {
+      return res.status(400).json({ erro: `Estoque insuficiente para bebida ${bebida.nome}` });
+    }
+
+    estoque.quantidade -= item.quantidade;
+
+    const subtotal = bebida.preco * item.quantidade;
+    total += subtotal;
+
+    itensProcessados.push({
+      bebidaId: item.bebidaId,
+      nome: bebida.nome,
+      quantidade: item.quantidade,
+      precoUnitario: bebida.preco,
+      subtotal
     });
   }
 
-  
-  for (const item of itensCarrinho) {
-    const estoqueBebida = Estoque.listarEstoques().find(e => e.bebidaId === item.bebidaId);
-    estoqueBebida.quantidade -= item.quantidade;
-  }
-
-  const total = itensCarrinho.reduce((soma, item) => {
-    const bebida = Bebida.buscarPorId(item.bebidaId);
-    return soma + (bebida.valor * item.quantidade);
-  }, 0);
-
-  const venda = Venda.registrarVenda(itensCarrinho, total);
-  Carrinho.limparCarrinho();
-
-  res.status(201).json({ mensagem: 'Venda realizada com sucesso.', venda });
+  const novaVenda = Venda.criarVenda({ itens: itensProcessados, total });
+  res.status(201).json(novaVenda);
 }
 
 function listarVendas(req, res) {
-  res.json(Venda.listarVendas());
+  const vendas = Venda.listarVendas();
+  res.json(vendas);
 }
 
-module.exports = { finalizarCompra, listarVendas };
+function buscarVendaPorId(req, res) {
+  const venda = Venda.buscarVendaPorId(req.params.id);
+  if (!venda) return res.status(404).json({ erro: 'Venda não encontrada.' });
+
+  res.json(venda);
+}
+
+function deletarVenda(req, res) {
+  const venda = Venda.deletarVenda(req.params.id);
+  if (!venda) return res.status(404).json({ erro: 'Venda não encontrada.' });
+
+  res.json(venda);
+}
+
+function atualizarStatusVenda(req, res) {
+  const { status } = req.body;
+  const id = req.params.id;
+
+  const resultado = Venda.atualizarStatus(id, status);
+
+  if (resultado === null) {
+    return res.status(404).json({ erro: 'Venda não encontrada.' });
+  }
+
+  if (resultado === 'invalido') {
+    return res.status(400).json({ erro: 'Status inválido. Use: cotacao, confirmado, faturado, entregue.' });
+  }
+
+  res.json(resultado);
+}
+
+module.exports = {
+  criarVenda,
+  listarVendas,
+  buscarVendaPorId,
+  deletarVenda,
+  atualizarStatusVenda
+};

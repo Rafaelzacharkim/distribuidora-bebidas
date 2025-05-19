@@ -5,7 +5,7 @@ POST http://localhost:3000/fornecedores
 Content-Type: application/json
 
 {
-  "nome": "Fornecedor XPTO",
+  "nome": "Fornecedor RAPTO",
   "cnpj": "12345678900001",
   "contato": "contato@xpto.com"
 }
@@ -15,10 +15,10 @@ Content-Type: application/json
 GET http://localhost:3000/fornecedores
 
 ### Buscar fornecedor por ID
-GET http://localhost:3000/fornecedores/bd8c7c89-c7ec-4813-9104-f2b448a41e40
+GET http://localhost:3000/fornecedores/622ca753-5f95-49b2-b538-7b52f7594712
 
 ### Atualizar fornecedor
-PUT http://localhost:3000/fornecedores/bd8c7c89-c7ec-4813-9104-f2b448a41e40
+PUT http://localhost:3000/fornecedores/481e3f0e-7736-4838-ac8f-3b5c304daff9
 Content-Type: application/json
 
 {
@@ -26,7 +26,7 @@ Content-Type: application/json
 }
 
 ### Deletar fornecedor
-DELETE http://localhost:3000/fornecedores/9b96dd93-2079-40c3-a075-90a4b8a3e580
+DELETE http://localhost:3000/fornecedores/481e3f0e-7736-4838-ac8f-3b5c304daff9
 
 
 
@@ -39,7 +39,7 @@ Content-Type: application/json
   "marca": "Antarctica",
   "volume": "350ml",
   "valor": 5.0,
-  "idFornecedor": "8beb3a27-6b66-4275-a010-82afcee1874e"
+  "idFornecedor": "622ca753-5f95-49b2-b538-7b52f7594712"
 }
 
 
@@ -48,7 +48,7 @@ Content-Type: application/json
 GET http://localhost:3000/bebidas
 
 ### Buscar bebida por ID
-GET http://localhost:3000/bebidas/009a957c-1c5b-4bfc-a4bd-41908deac991
+GET http://localhost:3000/bebidas/d8884c35-6ca6-43e2-90e3-a8b40b095f84
 
 ### Atualizar bebida
 PUT http://localhost:3000/bebidas/009a957c-1c5b-4bfc-a4bd-41908deac991
@@ -68,7 +68,7 @@ POST http://localhost:3000/estoque
 Content-Type: application/json
 
 {
-  "bebidaId": "ed9f7bc9-6f5b-4d14-a938-0bbd0f748183",
+  "bebidaId": "1ea4ea19-b582-4e4c-9ed3-eec08e152a41",
   "quantidade": 50,
   "localArmazenamento": "Depósito A"
 }
@@ -77,7 +77,7 @@ Content-Type: application/json
 GET http://localhost:3000/estoque
 
 ### Buscar estoque por ID
-GET http://localhost:3000/estoque/41e3eadf-8b79-4f5c-a3e0-4527a479da3f
+GET http://localhost:3000/estoque/d8884c35-6ca6-43e2-90e3-a8b40b095f84
 
 ### Atualizar quantidade do estoque
 PUT http://localhost:3000/estoque/41e3eadf-8b79-4f5c-a3e0-4527a479da3f
@@ -96,21 +96,42 @@ POST http://localhost:3000/carrinho
 Content-Type: application/json
 
 {
-  "bebidaId": "85e96dd5-9943-4375-a7d9-8a92446a1389",
-  "quantidade": 3
+  "bebidaId": "1ea4ea19-b582-4e4c-9ed3-eec08e152a41",
+  "quantidade": 54
 }
 
 ### Ver carrinho
 GET http://localhost:3000/carrinho
 
 ### Remover um item
-DELETE http://localhost:3000/carrinho/59d32722-89fd-4c85-823c-5f8f0229ffa6
+DELETE http://localhost:3000/carrinho/482a0a93-aec9-4916-81b6-0733e1cf7e91
 
 ### Esvaziar carrinho
 DELETE http://localhost:3000/carrinho
 
 
-
-### Criar vendas
-
+### Criar venda
 POST http://localhost:3000/vendas
+Content-Type: application/json
+
+{
+  "itens": [
+    {
+      "bebidaId": "1ea4ea19-b582-4e4c-9ed3-eec08e152a41",
+      "quantidade": 2
+    },
+    {
+      "bebidaId": "1ea4ea19-b582-4e4c-9ed3-eec08e152a41",
+      "quantidade": 1
+    }
+  ]
+}
+
+
+### Status da venda
+PATCH http://localhost:3000/vendas/841b16a8-4f14-40f2-b745-511d0015585e/status
+Content-Type: application/json
+
+{
+  "status": "confirmado"
+}
