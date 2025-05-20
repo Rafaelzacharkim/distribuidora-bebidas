@@ -39,7 +39,7 @@ Content-Type: application/json
   "marca": "Antarctica",
   "volume": "350ml",
   "valor": 5.0,
-  "idFornecedor": "622ca753-5f95-49b2-b538-7b52f7594712"
+  "idFornecedor": "1dcd9fde-e508-4764-acff-5383a2c903ad"
 }
 
 
@@ -68,7 +68,7 @@ POST http://localhost:3000/estoque
 Content-Type: application/json
 
 {
-  "bebidaId": "1ea4ea19-b582-4e4c-9ed3-eec08e152a41",
+  "bebidaId": "03c32ab5-8ee3-4626-bc27-5c45d4c13936",
   "quantidade": 50,
   "localArmazenamento": "Depósito A"
 }
@@ -96,42 +96,65 @@ POST http://localhost:3000/carrinho
 Content-Type: application/json
 
 {
-  "bebidaId": "1ea4ea19-b582-4e4c-9ed3-eec08e152a41",
-  "quantidade": 54
+  "bebidaId": "03c32ab5-8ee3-4626-bc27-5c45d4c13936",
+  "quantidade": 20
 }
 
 ### Ver carrinho
 GET http://localhost:3000/carrinho
 
 ### Remover um item
-DELETE http://localhost:3000/carrinho/482a0a93-aec9-4916-81b6-0733e1cf7e91
+DELETE http://localhost:3000/carrinho/d32f7053-7cd4-48dd-857e-70f1a3db2dc8
 
 ### Esvaziar carrinho
 DELETE http://localhost:3000/carrinho
 
 
-### Criar venda
+### 1. Criar venda (estado inicial: cotacao)
 POST http://localhost:3000/vendas
 Content-Type: application/json
 
 {
   "itens": [
     {
-      "bebidaId": "1ea4ea19-b582-4e4c-9ed3-eec08e152a41",
+      "bebidaId": "03c32ab5-8ee3-4626-bc27-5c45d4c13936",
       "quantidade": 2
-    },
-    {
-      "bebidaId": "1ea4ea19-b582-4e4c-9ed3-eec08e152a41",
-      "quantidade": 1
     }
   ]
 }
 
 
-### Status da venda
-PATCH http://localhost:3000/vendas/841b16a8-4f14-40f2-b745-511d0015585e/status
+
+### 2. Listar todas as vendas
+GET http://localhost:3000/vendas
+
+### 3. Buscar venda por ID
+GET http://localhost:3000/vendas/65121279-a3cb-4e99-8fe2-1a98fac2bc3c
+
+### 4. Atualizar status para "confirmado" (baixa no estoque)
+PATCH http://localhost:3000/vendas/3921803c-d8fb-4e3c-915f-75ee89bcdefe/status
 Content-Type: application/json
 
 {
   "status": "confirmado"
 }
+
+### 5. Atualizar status para "faturado"
+PATCH http://localhost:3000/vendas/{{idVenda}}/status
+Content-Type: application/json
+
+{
+  "status": "faturado"
+}
+
+### 6. Atualizar status para "entregue"
+PATCH http://localhost:3000/vendas/{{idVenda}}/status
+Content-Type: application/json
+
+{
+  "status": "entregue"
+}
+
+### 7. deletar venda
+
+DELETE http://localhost:3000/vendas/ID_DA_VENDA

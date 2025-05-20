@@ -31,6 +31,20 @@ function atualizarEstoque(id, dadosAtualizados) {
   }
   return null;
 }
+function removerEstoque(bebidaId, quantidade) {
+  const estoqueItem = estoque.find(e => e.bebidaId === bebidaId);
+  if (!estoqueItem) {
+    throw new Error('Item de estoque não encontrado.');
+  }
+
+  if (estoqueItem.quantidade < quantidade) {
+    throw new Error('Estoque insuficiente.');
+  }
+
+  estoqueItem.quantidade -= quantidade;
+  return estoqueItem;
+}
+
 
 function deletarEstoque(id) {
   const index = estoque.findIndex(e => e.id === id);
@@ -45,5 +59,6 @@ module.exports = {
   listarEstoques,
   buscarEstoquePorId,
   atualizarEstoque,
-  deletarEstoque
+  deletarEstoque,
+  removerEstoque
 };
