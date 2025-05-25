@@ -1,0 +1,188 @@
+# Teste de API para o sistema de gerenciamento de bebidas
+
+# Criar fornecedor
+POST http://localhost:3000/fornecedores
+Content-Type: application/json
+
+{
+  "nome": "Fornecedor RAPTO",
+  "cnpj": "12345678900001",
+  "contato": "contato@xpto.com"
+}
+
+
+### Listar todos os fornecedores
+GET http://localhost:3000/fornecedores
+
+### Buscar fornecedor por ID
+GET http://localhost:3000/fornecedores/622ca753-5f95-49b2-b538-7b52f7594712
+
+### Atualizar fornecedor
+PUT http://localhost:3000/fornecedores/481e3f0e-7736-4838-ac8f-3b5c304daff9
+Content-Type: application/json
+
+{
+  "contato": "atendimento@bebidas.com"
+}
+
+### Deletar fornecedor
+DELETE http://localhost:3000/fornecedores/481e3f0e-7736-4838-ac8f-3b5c304daff9
+
+
+
+### Criar bebida com idFornecedor (substitua pelo ID real depois de criar o fornecedor)
+POST http://localhost:3000/bebidas
+Content-Type: application/json
+
+{
+  "nome": "Guaraná",
+  "marca": "Antarctica",
+  "volume": "350ml",
+  "valor": 5.0,
+  "idFornecedor": "ffcd8aca-da33-4fd8-947b-08cb7c9afc0a"
+}
+
+
+
+### Listar todas as bebidas
+GET http://localhost:3000/bebidas
+
+### Buscar bebida por ID
+GET http://localhost:3000/bebidas/d8884c35-6ca6-43e2-90e3-a8b40b095f84
+
+### Atualizar bebida
+PUT http://localhost:3000/bebidas/009a957c-1c5b-4bfc-a4bd-41908deac991
+Content-Type: application/json
+
+{
+  "nome": "Guaraná Antártica",
+  "valor": 6.0
+}
+
+### Deletar bebida
+DELETE http://localhost:3000/bebidas/538c6afb-598a-4db5-a978-09f68a5871a7
+
+
+### Criar estoque para bebida (substitua o ID real da bebida abaixo!)
+POST http://localhost:3000/estoque
+Content-Type: application/json
+
+{
+  "bebidaId": "6ae3ef9e-aca0-422f-a451-56852a0d7f2e",
+  "quantidade": 50,
+  "localArmazenamento": "Depósito A"
+}
+
+### Listar estoque
+GET http://localhost:3000/estoque
+
+### Buscar estoque por ID
+GET http://localhost:3000/estoque/d8884c35-6ca6-43e2-90e3-a8b40b095f84
+
+### Atualizar quantidade do estoque
+PUT http://localhost:3000/estoque/41e3eadf-8b79-4f5c-a3e0-4527a479da3f
+Content-Type: application/json
+
+{
+  "quantidade": 100
+}
+
+### Remover estoque
+DELETE http://localhost:3000/estoque/41e3eadf-8b79-4f5c-a3e0-4527a479da3f
+
+
+### Criar cliente
+POST http://localhost:3000/clientes
+Content-Type: application/json
+
+{
+  "nome": "João Silva",
+  "email": "joao@email.com"
+}
+
+### Listar clientes
+GET http://localhost:3000/clientes
+
+### Criar venda com cliente
+POST http://localhost:3000/vendas
+Content-Type: application/json
+
+{
+  "clienteId": "665c072b-c151-43bd-b88c-2aa652a12881",
+  "itens": [
+    {
+      "bebidaId": "6ae3ef9e-aca0-422f-a451-56852a0d7f2e",
+      "quantidade": 3
+    }
+  ]
+}
+
+
+
+### Adicionar bebida ao carrinho
+POST http://localhost:3000/carrinho
+Content-Type: application/json
+
+{
+  "bebidaId": "c84351d1-2f05-4142-8804-7d3b6c33f0b1",
+  "quantidade": 20
+}
+
+### Ver carrinho
+GET http://localhost:3000/carrinho
+
+### Remover um item
+DELETE http://localhost:3000/carrinho/d32f7053-7cd4-48dd-857e-70f1a3db2dc8
+
+### Esvaziar carrinho
+DELETE http://localhost:3000/carrinho
+
+
+### 1. Criar venda (estado inicial: cotacao)
+POST http://localhost:3000/vendas
+Content-Type: application/json
+
+{
+  "itens": [
+    {
+      "bebidaId": "c84351d1-2f05-4142-8804-7d3b6c33f0b1",
+      "quantidade": 2
+    }
+  ]
+}
+
+
+
+### 2. Listar todas as vendas
+GET http://localhost:3000/vendas
+
+### 3. Buscar venda por ID
+GET http://localhost:3000/vendas/6f1a6999-ed56-4533-8b7d-2a2f5cfdc479
+
+### 4. Atualizar status para "confirmado" (baixa no estoque)
+PATCH http://localhost:3000/vendas/88b3381a-0b84-4892-9dad-6de539469a65/status
+Content-Type: application/json
+
+{
+  "status": "confirmado"
+}
+
+### 5. Atualizar status para "faturado"
+PATCH http://localhost:3000/vendas/88b3381a-0b84-4892-9dad-6de539469a65/status
+Content-Type: application/json
+
+{
+  "status": "faturado"
+}
+
+### 6. Atualizar status para "entregue"
+PATCH http://localhost:3000/vendas/6f1a6999-ed56-4533-8b7d-2a2f5cfdc479/status
+Content-Type: application/json
+
+{
+  "status": "entregue"
+}
+
+### 7. deletar venda
+
+DELETE http://localhost:3000/vendas/6f1a6999-ed56-4533-8b7d-2a2f5cfdc479
