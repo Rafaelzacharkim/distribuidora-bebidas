@@ -2,19 +2,21 @@ const Venda = require('../models/vendaModel');
 const Estoque = require('../models/estoqueModel');
 const Bebida = require('../models/bebidaModel');
 const { removerEstoque } = require('../models/estoqueModel');
+const { clientes } = require('./clienteController');
 
 
-// Controller para gerenciar vendas e status
-
-// Cria uma nova venda em estado 'cotacao'
 function criarVenda(req, res) {
-  const { itens } = req.body;
+  const { clienteId, itens } = req.body;
 
-  if (!Array.isArray(itens) || itens.length === 0) {
-    return res.status(400).json({ erro: 'Itens da venda são obrigatórios.' });
+  if (!clienteId || !Array.isArray(itens) || itens.length === 0) {
+    return res.status(400).json({ erro: 'clienteId e itens da venda são obrigatórios.' });
   }
 
-  // Valida itens sem afetar estoque agora
+  const cliente = clientes.find(c => c.id === clienteId);
+  if (!cliente) {
+    return res.status(404).json({ erro: 'Cliente não encontrado.' });
+  }
+
   for (const item of itens) {
     if (!item.bebidaId || typeof item.quantidade !== 'number') {
       return res.status(400).json({
@@ -23,17 +25,17 @@ function criarVenda(req, res) {
     }
   }
 
-  const novaVenda = Venda.criarVenda({ itens });
+  const novaVenda = Venda.criarVenda({ clienteId, itens });
   return res.status(201).json(novaVenda);
 }
 
-// Lista todas as vendas
+
 function listarVendas(req, res) {
   const todas = Venda.listarVendas();
   res.json(todas);
 }
 
-// Busca uma venda pelo ID e adiciona detalhes dos itens
+
 function buscarVendaPorId(req, res) {
   const { id } = req.params;
   const venda = Venda.buscarVendaPorId(id);
@@ -41,8 +43,8 @@ function buscarVendaPorId(req, res) {
     return res.status(404).json({ erro: 'Venda não encontrada.' });
   }
 
-  // Enriquecer itens com nome, subtotal
-  venda.itens = venda.itens.map(item => {
+
+  const itensDetalhados = venda.itens.map(item => {
     const bebida = Bebida.buscarPorId(item.bebidaId);
     return {
       bebidaId: item.bebidaId,
@@ -52,14 +54,22 @@ function buscarVendaPorId(req, res) {
       subtotal: (bebida?.preco || 0) * item.quantidade
     };
   });
+
+  const total = itensDetalhados.reduce((soma, itm) => soma + itm.subtotal, 0);
+
   
-  // Calcular total dinâmico
-  venda.total = venda.itens.reduce((soma, itm) => soma + itm.subtotal, 0);
-  
-  res.json(venda);
+  const cliente = clientes.find(c => c.id === venda.clienteId);
+
+  res.json({
+    id: venda.id,
+    cliente: cliente || { id: venda.clienteId, nome: 'Desconhecido' },
+    status: venda.status,
+    data: venda.data,
+    itens: itensDetalhados,
+    total
+  });
 }
 
-// Remove uma venda pelo ID
 function deletarVenda(req, res) {
   const { id } = req.params;
   const venda = Venda.deletarVenda(id);
@@ -69,19 +79,17 @@ function deletarVenda(req, res) {
   res.json(venda);
 }
 
-// Atualiza o status da venda: cotacao -> confirmado -> faturado -> entregue
+
 function atualizarStatusVenda(req, res) {
   const { id } = req.params;
   const { status } = req.body;
 
   try {
-    
     const venda = Venda.buscarVendaPorId(id);
     if (!venda) {
       return res.status(404).json({ erro: 'Venda não encontrada.' });
     }
 
-   
     if (status === 'confirmado') {
       for (const item of venda.itens) {
         try {
@@ -92,7 +100,6 @@ function atualizarStatusVenda(req, res) {
       }
     }
 
-   
     const vendaAtualizada = Venda.atualizarStatusVenda(id, status);
     res.json(vendaAtualizada);
     
@@ -100,7 +107,6 @@ function atualizarStatusVenda(req, res) {
     return res.status(400).json({ erro: err.message });
   }
 }
-
 
 module.exports = {
   criarVenda,
