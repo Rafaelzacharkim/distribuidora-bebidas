@@ -125,6 +125,10 @@ curl -X POST http://localhost:3000/vendas -H "Content-Type: application/json" -d
 }'
 ```
 
+## BPMN
+![New BPMN diagram](https://github.com/user-attachments/assets/3fac9466-40bf-4e78-b7ed-6ddaa118b79b)
+
+
 ## Contribuição
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou pull requests.
